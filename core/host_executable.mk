@@ -50,7 +50,7 @@ endif
 LOCAL_2ND_ARCH_VAR_PREFIX :=
 endif  # HOST_2ND_ARCH
 
-ifdef HOST_CROSS_OS
+ifdef HOST_CROSS_OS_DISABLED_FOR_HYBRIS_SUPPORT
 my_prefix := HOST_CROSS_
 LOCAL_HOST_PREFIX := $(my_prefix)
 include $(BUILD_SYSTEM)/module_arch_supported.mk

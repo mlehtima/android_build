@@ -307,7 +307,7 @@ TARGET_BUILD_JAVA_SUPPORT_LEVEL := platform
 
 # -----------------------------------------------------------------
 # The pdk (Platform Development Kit) build
-include build/core/pdk_config.mk
+#include build/core/pdk_config.mk
 
 #
 # -----------------------------------------------------------------
@@ -546,7 +546,37 @@ ifneq ($(dont_bother),true)
 # Include all of the makefiles in the system
 #
 
-subdir_makefiles := $(SOONG_ANDROID_MK) $(call first-makefiles-under,$(TOP))
+subdir_makefile_dirs := bionic bootable build device external hardware hybris libcore system vendor
+
+# Can't use first-makefiles-under here because
+# --mindepth=2 makes the prunes not work.
+subdir_makefiles := \
+$(SOONG_ANDROID_MK) \
+./frameworks/base/Android.mk \
+./frameworks/native/cmds/dumpstate/Android.mk \
+./frameworks/native/opengl/libagl/Android.mk \
+./frameworks/native/opengl/libs/Android.mk \
+./frameworks/native/services/surfaceflinger/Android.mk \
+./frameworks/av/camera/Android.mk \
+./frameworks/av/media/common_time/Android.mk \
+./frameworks/av/media/libmedia/Android.mk \
+./frameworks/av/media/libmediametrics/Android.mk \
+./frameworks/av/media/libstagefright/Android.mk \
+./frameworks/av/drm/libmediadrm/Android.mk \
+./frameworks/av/drm/libdrmframework/Android.mk \
+./frameworks/av/drm/common/Android.mk \
+./frameworks/av/services/audiopolicy/Android.mk \
+./frameworks/av/services/camera/libcameraservice/Android.mk \
+./frameworks/av/media/libmediaplayerservice/Android.mk \
+./frameworks/av/services/audioflinger/Android.mk \
+./frameworks/rs/cpp/Android.mk \
+./prebuilts/ndk/Android.mk \
+./prebuilts/tools/Android.mk \
+./prebuilts/sdk/tools/Android.mk \
+$(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git $(subdir_makefile_dirs) Android.mk)
+# End of hybris mods
+
+
 subdir_makefiles_total := $(words $(subdir_makefiles))
 .KATI_READONLY := subdir_makefiles_total
 
